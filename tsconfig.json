@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+      "module": "commonjs",
+      "target": "es6",
+      "outDir": "dist", 
+      "strict": true,
+      "noImplicitAny": false,
+      "strictNullChecks": true,
+      "strictFunctionTypes": true,
+      "alwaysStrict": true, 
+      "removeComments": true,
+  },
+  // "include": ["src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}
