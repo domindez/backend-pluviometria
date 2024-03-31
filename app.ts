@@ -16,3 +16,6 @@ app.use(express.json())
 
 const routerTest = require('./routers/test')
 app.use('/api/test', routerTest)
+
+const routerCheckWUnderground = require('./routers/checkWUnderground')
+app.use('/api/check-wunderground', routerCheckWUnderground)
