@@ -14,8 +14,8 @@ app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-const routerTest = require('./routers/test')
-app.use('/api/test', routerTest)
+const routerTest = require('./routers/getData')
+app.use('/api/get-data', routerTest)
 
 const routerCheckWUnderground = require('./routers/checkWUnderground')
 app.use('/api/check-wunderground', routerCheckWUnderground)
