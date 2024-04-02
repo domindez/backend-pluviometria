@@ -27,7 +27,7 @@ routerCheckWUnderground.get('/', async (req, res) => {
 
     const depuredValue = parseFloat((parseFloat(precipAccumValue ?? '0') * 2.54).toFixed(1))
 
-    if (depuredValue > 0) {
+    if (depuredValue > 1) {
       const today = moment.tz('Europe/Madrid').startOf('day').toISOString()
 
       const filter = { fecha: new Date(today) }
