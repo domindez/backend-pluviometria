@@ -8,7 +8,6 @@ const routerCheckWUnderground = express.Router()
 
 routerCheckWUnderground.get('/', async (req, res) => {
   try {
-    await temp()
     const browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     })
@@ -16,17 +15,11 @@ routerCheckWUnderground.get('/', async (req, res) => {
     await page.goto('https://www.wunderground.com/dashboard/pws/ICASTI60', {
       waitUntil: 'networkidle2'
     })
-    // await page.waitForSelector('.weather__data .weather__text .wu-unit-rain .wu-value', { timeout: 10000 })
-    await page.waitForSelector('lib-display-unit .wu-unit-temperature .wu-value', { timeout: 10000 })
-
-    // const precipAccumValue = await page.evaluate(() => {
-    //   const precipAccumSpan = document.querySelector('.weather__data .weather__text .wu-unit-rain .wu-value')
-    //   return precipAccumSpan?.textContent?.trim() ?? null
-    // })
+    await page.waitForSelector('.weather__data .weather__text .wu-unit-rain .wu-value', { timeout: 10000 })
 
     const precipAccumValue = await page.evaluate(() => {
-      const tempSpan = document.querySelector('lib-display-unit .wu-unit-temperature .wu-value')
-      return tempSpan?.textContent?.trim() ?? null
+      const precipAccumSpan = document.querySelector('.weather__data .weather__text .wu-unit-rain .wu-value')
+      return precipAccumSpan?.textContent?.trim() ?? null
     })
 
     console.log('Valor de precipitación acumulada:', precipAccumValue)
@@ -34,7 +27,7 @@ routerCheckWUnderground.get('/', async (req, res) => {
 
     const depuredValue = parseFloat((parseFloat(precipAccumValue ?? '0') * 2.54).toFixed(1))
 
-    if (depuredValue > 1) {
+    if (depuredValue > 0) {
       const today = moment.tz('Europe/Madrid').startOf('day').toISOString()
 
       const filter = { fecha: new Date(today) }
@@ -55,25 +48,3 @@ routerCheckWUnderground.get('/', async (req, res) => {
 })
 
 module.exports = routerCheckWUnderground
-
-const temp = async () => {
-  const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  })
-  const page = await browser.newPage()
-  await page.goto('https://www.wunderground.com/dashboard/pws/ICASTI60', {
-    waitUntil: 'networkidle2'
-  })
-
-  // Esperamos que el selector específico del valor de la temperatura esté disponible
-  await page.waitForSelector('lib-display-unit .wu-unit-temperature .wu-value', { timeout: 10000 })
-
-  // Evaluamos la página para extraer el texto del elemento seleccionado
-  const tempValue = await page.evaluate(() => {
-    const tempSpan = document.querySelector('lib-display-unit .wu-unit-temperature .wu-value')
-    return tempSpan?.textContent?.trim() ?? null
-  })
-
-  console.log('Valor de temperatura:', tempValue)
-  await browser.close()
-}
