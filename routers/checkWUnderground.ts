@@ -2,6 +2,7 @@
 import express = require('express')
 import puppeteer from 'puppeteer'
 import PluvioData from '../models/pluvioData'
+import moment from 'moment-timezone'
 
 const routerCheckWUnderground = express.Router()
 
@@ -26,8 +27,9 @@ routerCheckWUnderground.get('/', async (req, res) => {
 
     const depuredValue = parseFloat((parseFloat(precipAccumValue ?? '0') * 2.54).toFixed(1))
 
-    if (depuredValue > 1) {
-      const today = new Date().toISOString().split('T')[0]
+    if (depuredValue > -1) {
+      const today = moment.tz('Europe/Madrid').startOf('day').toISOString();
+
       const filter = { fecha: new Date(today) }
       const update = { $set: { litros: depuredValue } }
       const options = { upsert: true, new: true }
