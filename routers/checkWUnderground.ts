@@ -14,6 +14,7 @@ routerCheckWUnderground.get('/', async (req, res) => {
     await page.goto('https://www.wunderground.com/dashboard/pws/ICASTI60', {
       waitUntil: 'networkidle2'
     })
+
     await page.waitForSelector('.weather__data .weather__text .wu-unit-rain .wu-value', { timeout: 10000 })
 
     const precipAccumValue = await page.evaluate(() => {
