@@ -26,7 +26,7 @@ routerCheckWUnderground.get('/', async (req, res) => {
     console.log('Valor de precipitación acumulada:', precipAccumValue)
     await browser.close()
 
-    const depuredValue = parseFloat((parseFloat(precipAccumValue ?? '0') * 2.54).toFixed(1))
+    const depuredValue = parseFloat((parseFloat(precipAccumValue ?? '0') * 25.4).toFixed(1))
 
     if (depuredValue > 1) {
       const today = moment.tz('Europe/Madrid').startOf('day').toISOString()
