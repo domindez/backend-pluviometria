@@ -19,3 +19,6 @@ app.use('/api/get-data', routerTest)
 
 const routerCheckWUnderground = require('./routers/checkWUnderground')
 app.use('/api/check-wunderground', routerCheckWUnderground)
+
+const routerInsertData = require('./routers/insertData')
+app.use('/api/insert-data', routerInsertData)
