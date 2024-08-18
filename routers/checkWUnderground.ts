@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express = require('express')
-import puppeteer from 'puppeteer'
+import puppeteer, { type Browser } from 'puppeteer'
 import PluvioData from '../models/pluvioData'
 import * as moment from 'moment-timezone'
 
 const routerCheckWUnderground = express.Router()
 
 routerCheckWUnderground.get('/', async (req, res) => {
+  let browser: Browser | null = null
   try {
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox']
     })
     const page = await browser.newPage()
@@ -24,7 +25,6 @@ routerCheckWUnderground.get('/', async (req, res) => {
     })
 
     console.log('Valor de precipitación acumulada:', precipAccumValue)
-    await browser.close()
 
     const depuredValue = parseFloat((parseFloat(precipAccumValue ?? '0') * 25.4).toFixed(1))
 
@@ -45,6 +45,10 @@ routerCheckWUnderground.get('/', async (req, res) => {
   } catch (error) {
     console.error('Error al realizar la petición:', error)
     res.status(500).send('Error interno del servidor')
+  } finally {
+    if (browser !== null) {
+      await browser.close()
+    }
   }
 })
 
